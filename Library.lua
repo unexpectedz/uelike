@@ -2321,12 +2321,13 @@ Library:AddToRegistry(Inner, {
 			Parent = DropdownInner;
 		});
 
-		local DropdownArrow = Library:Create('ImageLabel', {
+local DropdownArrow = Library:CreateLabel({
 			AnchorPoint = Vector2.new(0, 0.5);
 			BackgroundTransparency = 1;
 			Position = UDim2.new(1, -16, 0.5, 0);
 			Size = UDim2.new(0, 12, 0, 12);
-			Image = 'http://www.roblox.com/asset/?id=6282522798';
+			Text = '>';
+			TextSize = 12;
 			ZIndex = 8;
 			Parent = DropdownInner;
 		});
@@ -3131,9 +3132,10 @@ local MainSectionOuter = Library:Create('Frame', {
 		Parent = MainSectionInner;
 	});
 
-	local TabListLayout = Library:Create('UIListLayout', {
+local TabListLayout = Library:Create('UIListLayout', {
 		Padding = UDim.new(0, Config.TabPadding);
 		FillDirection = Enum.FillDirection.Horizontal;
+		HorizontalAlignment = Enum.HorizontalAlignment.Center;
 		SortOrder = Enum.SortOrder.LayoutOrder;
 		Parent = TabArea;
 	});
@@ -3163,12 +3165,12 @@ local MainSectionOuter = Library:Create('Frame', {
 			Tabboxes = {};
 		};
 
-		local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
+local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 13);
 
 		local TabButton = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
 			BorderColor3 = Library.OutlineColor;
-			Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
+			Size = UDim2.new(0, TabButtonWidth + 8, 0, 18);
 			ZIndex = 1;
 			Parent = TabArea;
 		});
@@ -3178,10 +3180,11 @@ local MainSectionOuter = Library:Create('Frame', {
 			BorderColor3 = 'OutlineColor';
 		});
 
-		local TabButtonLabel = Library:CreateLabel({
+local TabButtonLabel = Library:CreateLabel({
 			Position = UDim2.new(0, 0, 0, 0);
 			Size = UDim2.new(1, 0, 1, -1);
 			Text = Name;
+			TextSize = 13;
 			ZIndex = 1;
 			Parent = TabButton;
 		});
@@ -3272,13 +3275,13 @@ local TabIndicator = Library:Create('Frame', {
 			BackgroundColor3 = 'AccentColor';
 		});
 
-		function Tab:ShowTab()
+function Tab:ShowTab()
 			for _, Tab in next, Window.Tabs do
 				Tab:HideTab();
 			end;
 
 			Blocker.BackgroundTransparency = 0;
-			TabButton.BackgroundColor3 = Library.MainColor;
+			TabButton.BackgroundColor3 = Library:GetDarkerColor(Library.MainColor);
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
 			TabFrame.Visible = true;
 			TabIndicator.Visible = true;
