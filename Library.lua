@@ -587,15 +587,6 @@ do
 			Parent = HueBoxOuter;
 		});
 
-Library:Create('UIGradient', {
-				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-					ColorSequenceKeypoint.new(1, Color3.new(1, 1, 1))
-				});
-				Rotation = 90;
-				Parent = Inner;
-			});
-
 		local HueBox = Library:Create('TextBox', {
 			BackgroundTransparency = 1;
 			Position = UDim2.new(0, 5, 0, 0);
@@ -1459,7 +1450,8 @@ do
 		local Groupbox = self;
 		local Container = Groupbox.Container;
 
-local Outer = Library:Create('Frame', {
+local function CreateBaseButton(Button)
+			local Outer = Library:Create('Frame', {
 				BackgroundColor3 = Library.MainColor;
 				BorderColor3 = Library.OutlineColor;
 				Size = UDim2.new(1, -4, 0, 20);
@@ -1480,6 +1472,11 @@ local Outer = Library:Create('Frame', {
 				BorderColor3 = 'OutlineColor';
 			});
 
+			Library:AddToRegistry(Inner, {
+				BackgroundColor3 = 'MainColor';
+				BorderColor3 = 'OutlineColor';
+			});
+
 			local Label = Library:CreateLabel({
 				Size = UDim2.new(1, 0, 1, 0);
 				TextSize = 14;
@@ -1488,23 +1485,13 @@ local Outer = Library:Create('Frame', {
 				Parent = Inner;
 			});
 
-			Library:AddToRegistry(Outer, {
-				BorderColor3 = 'Black';
-			});
-
-Library:AddToRegistry(Inner, {
-		BackgroundColor3 = 'MainColor';
-		BorderColor3 = 'AccentColor';
-	});
-
 			Library:OnHighlight(Outer, Outer,
 				{ BorderColor3 = 'AccentColor' },
-				{ BorderColor3 = 'Black' }
+				{ BorderColor3 = 'OutlineColor' }
 			);
 
 			return Outer, Inner, Label
 		end
-
 		local function InitEvents(Button)
 			local function WaitForEvent(event, timeout, validator)
 				local bindable = Instance.new('BindableEvent')
@@ -3089,10 +3076,15 @@ local WindowLabel = Library:CreateLabel({
 		Parent = Inner;
 	});
 
-local VersionLabel = Library:CreateLabel({
+local _GameName = 'Unknown'
+	pcall(function()
+		_GameName = game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name
+	end)
+
+	local VersionLabel = Library:CreateLabel({
 		Position = UDim2.new(0, -8, 0, 0);
 		Size = UDim2.new(1, 0, 0, 25);
-		Text = game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name;
+		Text = _GameName;
 		RichText = true;
 		TextColor3 = Library.AccentColor;
 		TextXAlignment = Enum.TextXAlignment.Right;
@@ -3298,15 +3290,7 @@ function Tab:ShowTab()
 			TabIndicator.Visible = true;
 		end;
 
-		function Tab:HideTab()
-			Blocker.BackgroundTransparency = 1;
-			TabButton.BackgroundColor3 = Library.BackgroundColor;
-			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
-			TabFrame.Visible = false;
-			TabIndicator.Visible = false;
-		end;
-
-		function Tab:HideTab()
+function Tab:HideTab()
 			Blocker.BackgroundTransparency = 1;
 			TabButton.BackgroundColor3 = Library.BackgroundColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
