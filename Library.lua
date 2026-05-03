@@ -3135,7 +3135,6 @@ local MainSectionOuter = Library:Create('Frame', {
 local TabListLayout = Library:Create('UIListLayout', {
 		Padding = UDim.new(0, Config.TabPadding);
 		FillDirection = Enum.FillDirection.Horizontal;
-		HorizontalAlignment = Enum.HorizontalAlignment.Center;
 		SortOrder = Enum.SortOrder.LayoutOrder;
 		Parent = TabArea;
 	});
@@ -3165,12 +3164,12 @@ local TabListLayout = Library:Create('UIListLayout', {
 			Tabboxes = {};
 		};
 
-local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 13);
+local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
 
 		local TabButton = Library:Create('Frame', {
 			BackgroundColor3 = Library.BackgroundColor;
 			BorderColor3 = Library.OutlineColor;
-			Size = UDim2.new(0, TabButtonWidth + 8, 0, 18);
+			Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
 			ZIndex = 1;
 			Parent = TabArea;
 		});
@@ -3184,7 +3183,6 @@ local TabButtonLabel = Library:CreateLabel({
 			Position = UDim2.new(0, 0, 0, 0);
 			Size = UDim2.new(1, 0, 1, -1);
 			Text = Name;
-			TextSize = 13;
 			ZIndex = 1;
 			Parent = TabButton;
 		});
@@ -3282,9 +3280,17 @@ function Tab:ShowTab()
 
 			Blocker.BackgroundTransparency = 0;
 			TabButton.BackgroundColor3 = Library:GetDarkerColor(Library.MainColor);
-			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
+			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = nil;
 			TabFrame.Visible = true;
 			TabIndicator.Visible = true;
+		end;
+
+		function Tab:HideTab()
+			Blocker.BackgroundTransparency = 1;
+			TabButton.BackgroundColor3 = Library.BackgroundColor;
+			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
+			TabFrame.Visible = false;
+			TabIndicator.Visible = false;
 		end;
 
 		function Tab:HideTab()
