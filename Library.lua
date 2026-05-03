@@ -495,7 +495,7 @@ do
 		local Highlight = Library:Create('Frame', {
 			BackgroundColor3 = Library.AccentColor;
 			BorderSizePixel = 0;
-			Size = UDim2.new(1, 0, 0, 2);
+			Size = UDim2.new(1, 0, 0, 1);
 			ZIndex = 17;
 			Parent = PickerFrameInner;
 		});
@@ -1481,15 +1481,6 @@ local Inner = Library:Create('Frame', {
 				TextSize = 14;
 				Text = Button.Text;
 				ZIndex = 6;
-				Parent = Inner;
-			});
-
-			Library:Create('UIGradient', {
-				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 212, 212))
-				});
-				Rotation = 90;
 				Parent = Inner;
 			});
 
