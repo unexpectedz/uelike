@@ -1459,23 +1459,26 @@ do
 		local Groupbox = self;
 		local Container = Groupbox.Container;
 
-		local function CreateBaseButton(Button)
-			local Outer = Library:Create('Frame', {
-				BackgroundColor3 = Color3.new(0, 0, 0);
-				BorderColor3 = Color3.new(0, 0, 0);
+local Outer = Library:Create('Frame', {
+				BackgroundColor3 = Library.MainColor;
+				BorderColor3 = Library.OutlineColor;
 				Size = UDim2.new(1, -4, 0, 20);
 				ZIndex = 5;
 			});
 
-local Inner = Library:Create('Frame', {
-		BackgroundColor3 = Library.MainColor;
-		BorderColor3 = Library.MainColor;
-		BorderMode = Enum.BorderMode.Inset;
-		Position = UDim2.new(0, 1, 0, 1);
-		Size = UDim2.new(1, -2, 1, -2);
-		ZIndex = 1;
-		Parent = Outer;
-	});
+			local Inner = Library:Create('Frame', {
+				BackgroundColor3 = Library.MainColor;
+				BorderColor3 = Library.OutlineColor;
+				BorderMode = Enum.BorderMode.Inset;
+				Size = UDim2.new(1, 0, 1, 0);
+				ZIndex = 6;
+				Parent = Outer;
+			});
+
+			Library:AddToRegistry(Outer, {
+				BackgroundColor3 = 'MainColor';
+				BorderColor3 = 'OutlineColor';
+			});
 
 			local Label = Library:CreateLabel({
 				Size = UDim2.new(1, 0, 1, 0);
@@ -3268,7 +3271,7 @@ local TabButtonLabel = Library:CreateLabel({
 local TabIndicator = Library:Create('Frame', {
 			BackgroundColor3 = Library.AccentColor;
 			BorderSizePixel = 0;
-			Position = UDim2.new(0, 0, 1, -1);
+			Position = UDim2.new(0, 0, 0, 0);
 			Size = UDim2.new(1, 0, 0, 1);
 			ZIndex = 5;
 			Visible = false;
@@ -3285,7 +3288,11 @@ function Tab:ShowTab()
 			end;
 
 			Blocker.BackgroundTransparency = 0;
-			TabButton.BackgroundColor3 = Library:GetDarkerColor(Library.BackgroundColor);
+			TabButton.BackgroundColor3 = Color3.fromRGB(
+				Library.BackgroundColor.R * 255 * 0.6,
+				Library.BackgroundColor.G * 255 * 0.6,
+				Library.BackgroundColor.B * 255 * 0.6
+			);
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = nil;
 			TabFrame.Visible = true;
 			TabIndicator.Visible = true;
