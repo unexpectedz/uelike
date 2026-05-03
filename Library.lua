@@ -2802,7 +2802,7 @@ do
 
 	local WatermarkInner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
-		BorderColor3 = Library.AccentColor;
+		BorderColor3 = Library.OutlineColor;
 		BorderMode = Enum.BorderMode.Inset;
 		Size = UDim2.new(1, 0, 1, 0);
 		ZIndex = 201;
@@ -3078,9 +3078,9 @@ function Library:CreateWindow(...)
 		Parent = Outer;
 	});
 
-	Library:AddToRegistry(Inner, {
+Library:AddToRegistry(Inner, {
 		BackgroundColor3 = 'MainColor';
-		BorderColor3 = 'AccentColor';
+		BorderColor3 = 'OutlineColor';
 	});
 
 	local WindowLabel = Library:CreateLabel({
