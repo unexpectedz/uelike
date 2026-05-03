@@ -30,11 +30,11 @@ local Library = {
 
 	HudRegistry = {};
 
-	FontColor = Color3.fromRGB(255, 255, 255);
-	MainColor = Color3.fromRGB(28, 28, 28);
-	BackgroundColor = Color3.fromRGB(20, 20, 20);
-	AccentColor = Color3.fromRGB(0, 85, 255);
-	OutlineColor = Color3.fromRGB(50, 50, 50);
+        FontColor = Color3.fromRGB(220, 215, 225);
+	MainColor = Color3.fromRGB(30, 27, 35);
+	BackgroundColor = Color3.fromRGB(20, 18, 25);
+	AccentColor = Color3.fromRGB(255, 105, 145);
+	OutlineColor = Color3.fromRGB(55, 50, 65);
 	RiskColor = Color3.fromRGB(255, 50, 50),
 
 	Black = Color3.new(0, 0, 0);
@@ -496,6 +496,7 @@ do
 			BackgroundColor3 = Library.AccentColor;
 			BorderSizePixel = 0;
 			Size = UDim2.new(1, 0, 0, 1);
+			Position = UDim2.new(0, 0, 1, -1);
 			ZIndex = 17;
 			Parent = PickerFrameInner;
 		});
@@ -3085,14 +3086,19 @@ local WindowLabel = Library:CreateLabel({
 		Parent = Inner;
 	});
 
-	local VersionLabel = Library:CreateLabel({
+local VersionLabel = Library:CreateLabel({
 		Position = UDim2.new(0, -8, 0, 0);
 		Size = UDim2.new(1, 0, 0, 25);
-		Text = Config.Version or '';
+		Text = game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name;
 		RichText = true;
+		TextColor3 = Library.AccentColor;
 		TextXAlignment = Enum.TextXAlignment.Right;
 		ZIndex = 1;
 		Parent = Inner;
+	});
+
+	Library:AddToRegistry(VersionLabel, {
+		TextColor3 = 'AccentColor';
 	});
 
 local MainSectionOuter = Library:Create('Frame', {
@@ -3262,8 +3268,8 @@ local TabButtonLabel = Library:CreateLabel({
 local TabIndicator = Library:Create('Frame', {
 			BackgroundColor3 = Library.AccentColor;
 			BorderSizePixel = 0;
-			Position = UDim2.new(0, 0, 0, 0);
-			Size = UDim2.new(1, 0, 0, 2);
+			Position = UDim2.new(0, 0, 1, -1);
+			Size = UDim2.new(1, 0, 0, 1);
 			ZIndex = 5;
 			Visible = false;
 			Parent = TabButton;
@@ -3279,7 +3285,7 @@ function Tab:ShowTab()
 			end;
 
 			Blocker.BackgroundTransparency = 0;
-			TabButton.BackgroundColor3 = Library:GetDarkerColor(Library.MainColor);
+			TabButton.BackgroundColor3 = Library:GetDarkerColor(Library.BackgroundColor);
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = nil;
 			TabFrame.Visible = true;
 			TabIndicator.Visible = true;
