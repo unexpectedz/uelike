@@ -1468,9 +1468,8 @@ do
 
 local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
-		BorderColor3 = Library.OutlineColor;
+		BorderColor3 = Library.MainColor;
 		BorderMode = Enum.BorderMode.Inset;
-		BorderSizePixel = 0;
 		Position = UDim2.new(0, 1, 0, 1);
 		Size = UDim2.new(1, -2, 1, -2);
 		ZIndex = 1;
@@ -1498,10 +1497,10 @@ local Inner = Library:Create('Frame', {
 				BorderColor3 = 'Black';
 			});
 
-			Library:AddToRegistry(Inner, {
-				BackgroundColor3 = 'MainColor';
-				BorderColor3 = 'OutlineColor';
-			});
+Library:AddToRegistry(Inner, {
+		BackgroundColor3 = 'MainColor';
+		BorderColor3 = 'MainColor';
+	});
 
 			Library:OnHighlight(Outer, Outer,
 				{ BorderColor3 = 'AccentColor' },
@@ -3085,12 +3084,12 @@ Library:AddToRegistry(Inner, {
 		BorderColor3 = 'OutlineColor';
 	});
 
-	local WindowLabel = Library:CreateLabel({
+local WindowLabel = Library:CreateLabel({
 		Position = UDim2.new(0, 0, 0, 0);
 		Size = UDim2.new(1, 0, 0, 25);
 		Text = Config.Title or '';
 		TextXAlignment = Enum.TextXAlignment.Center;
-		ZIndex = 1;
+		ZIndex = 2;
 		Parent = Inner;
 	});
 
@@ -3334,9 +3333,9 @@ local MainSectionOuter = Library:Create('Frame', {
 				BackgroundColor3 = 'AccentColor';
 			});
 
-			local GroupboxLabel = Library:CreateLabel({
+local GroupboxLabel = Library:CreateLabel({
 				Size = UDim2.new(1, 0, 0, 18);
-				Position = UDim2.new(0, 4, 0, 2);
+				Position = UDim2.new(0, 0, 0, 2);
 				TextSize = 14;
 				Text = Info.Name;
 				TextXAlignment = Enum.TextXAlignment.Center;
