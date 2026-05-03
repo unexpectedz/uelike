@@ -185,16 +185,37 @@ function Library:MakeDraggable(Instance, Cutoff)
 				return;
 			end;
 
+			local Ghost = Library:Create('Frame', {
+				BackgroundTransparency = 1;
+				BorderColor3 = Library.AccentColor;
+				BorderSizePixel = 2;
+				Position = Instance.Position;
+				Size = Instance.Size;
+				ZIndex = 999;
+				Parent = ScreenGui;
+			});
+
+			Library:AddToRegistry(Ghost, {
+				BorderColor3 = 'AccentColor';
+			});
+
+			local NewPos = Instance.Position;
+
 			while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-				Instance.Position = UDim2.new(
+				NewPos = UDim2.new(
 					0,
 					Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
 					0,
 					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
 				);
 
+				Ghost.Position = NewPos;
+
 				RenderStepped:Wait();
 			end;
+
+			Instance.Position = NewPos;
+			Ghost:Destroy();
 		end;
 	end)
 end;
@@ -1483,6 +1504,11 @@ local function CreateBaseButton(Button)
 				Text = Button.Text;
 				ZIndex = 6;
 				Parent = Inner;
+			});
+
+Library:AddToRegistry(Inner, {
+				BackgroundColor3 = 'MainColor';
+				BorderColor3 = 'OutlineColor';
 			});
 
 			Library:OnHighlight(Outer, Outer,
