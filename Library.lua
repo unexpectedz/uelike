@@ -1490,7 +1490,7 @@ local Inner = Library:Create('Frame', {
 
 Library:AddToRegistry(Inner, {
 		BackgroundColor3 = 'MainColor';
-		BorderColor3 = 'MainColor';
+		BorderColor3 = 'AccentColor';
 	});
 
 			Library:OnHighlight(Outer, Outer,
