@@ -586,14 +586,14 @@ do
 			Parent = HueBoxOuter;
 		});
 
-		Library:Create('UIGradient', {
-			Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 212, 212))
+Library:Create('UIGradient', {
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
+					ColorSequenceKeypoint.new(1, Color3.new(1, 1, 1))
+				});
+				Rotation = 90;
+				Parent = Inner;
 			});
-			Rotation = 90;
-			Parent = HueBoxInner;
-		});
 
 		local HueBox = Library:Create('TextBox', {
 			BackgroundTransparency = 1;
@@ -3267,6 +3267,20 @@ local MainSectionOuter = Library:Create('Frame', {
 			end);
 		end;
 
+local TabIndicator = Library:Create('Frame', {
+			BackgroundColor3 = Library.AccentColor;
+			BorderSizePixel = 0;
+			Position = UDim2.new(0, 0, 0, 0);
+			Size = UDim2.new(1, 0, 0, 2);
+			ZIndex = 5;
+			Visible = false;
+			Parent = TabButton;
+		});
+
+		Library:AddToRegistry(TabIndicator, {
+			BackgroundColor3 = 'AccentColor';
+		});
+
 		function Tab:ShowTab()
 			for _, Tab in next, Window.Tabs do
 				Tab:HideTab();
@@ -3276,6 +3290,7 @@ local MainSectionOuter = Library:Create('Frame', {
 			TabButton.BackgroundColor3 = Library.MainColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
 			TabFrame.Visible = true;
+			TabIndicator.Visible = true;
 		end;
 
 		function Tab:HideTab()
@@ -3283,6 +3298,7 @@ local MainSectionOuter = Library:Create('Frame', {
 			TabButton.BackgroundColor3 = Library.BackgroundColor;
 			Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
 			TabFrame.Visible = false;
+			TabIndicator.Visible = false;
 		end;
 
 		function Tab:SetLayoutOrder(Position)
