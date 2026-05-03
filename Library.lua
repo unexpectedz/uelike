@@ -30,12 +30,11 @@ local Library = {
 
 	HudRegistry = {};
 
-        FontColor = Color3.fromRGB(220, 215, 225);
-	MainColor = Color3.fromRGB(30, 27, 35);
-	BackgroundColor = Color3.fromRGB(20, 18, 25);
-	AccentColor = Color3.fromRGB(255, 105, 145);
-	OutlineColor = Color3.fromRGB(55, 50, 65);
-	RiskColor = Color3.fromRGB(255, 50, 50),
+FontColor = Color3.fromRGB(220, 215, 225);
+	MainColor = Color3.fromRGB(22, 20, 26);
+	BackgroundColor = Color3.fromRGB(13, 12, 17);
+	AccentColor = Color3.fromRGB(220, 80, 115);
+	OutlineColor = Color3.fromRGB(42, 38, 52);
 
 	Black = Color3.new(0, 0, 0);
 	Font = Enum.Font.Code,
@@ -185,7 +184,7 @@ function Library:MakeDraggable(Instance, Cutoff)
 				return;
 			end;
 
-			local Ghost = Library:Create('Frame', {
+local DragOutline = Library:Create('Frame', {
 				BackgroundTransparency = 1;
 				BorderColor3 = Library.AccentColor;
 				BorderSizePixel = 2;
@@ -195,27 +194,20 @@ function Library:MakeDraggable(Instance, Cutoff)
 				Parent = ScreenGui;
 			});
 
-			Library:AddToRegistry(Ghost, {
-				BorderColor3 = 'AccentColor';
-			});
-
-			local NewPos = Instance.Position;
-
 			while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-				NewPos = UDim2.new(
+				local NewPos = UDim2.new(
 					0,
 					Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
 					0,
 					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
 				);
 
-				Ghost.Position = NewPos;
-
+				DragOutline.Position = NewPos;
 				RenderStepped:Wait();
 			end;
 
-			Instance.Position = NewPos;
-			Ghost:Destroy();
+			Instance.Position = DragOutline.Position;
+			DragOutline:Destroy();
 		end;
 	end)
 end;
@@ -1504,11 +1496,6 @@ local function CreateBaseButton(Button)
 				Text = Button.Text;
 				ZIndex = 6;
 				Parent = Inner;
-			});
-
-Library:AddToRegistry(Inner, {
-				BackgroundColor3 = 'MainColor';
-				BorderColor3 = 'OutlineColor';
 			});
 
 			Library:OnHighlight(Outer, Outer,
