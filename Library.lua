@@ -173,7 +173,9 @@ end;
 
 function Library:MakeDraggable(Instance, Cutoff)
 	Instance.Active = true;
-
+	
+	local DragOutline = nil
+	
 	Instance.InputBegan:Connect(function(Input)
 		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 			local ObjPos = Vector2.new(
@@ -184,6 +186,17 @@ function Library:MakeDraggable(Instance, Cutoff)
 			if ObjPos.Y > (Cutoff or 40) then
 				return;
 			end;
+			
+			-- Create outline while dragging
+			DragOutline = Library:Create('Frame', {
+				BackgroundTransparency = 1,
+				BorderColor3 = Library.AccentColor,
+				BorderSizePixel = 2,
+				Position = Instance.Position,
+				Size = Instance.Size,
+				ZIndex = Instance.ZIndex + 1000,
+				Parent = Instance.Parent,
+			})
 
 			while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 				Instance.Position = UDim2.new(
@@ -192,9 +205,19 @@ function Library:MakeDraggable(Instance, Cutoff)
 					0,
 					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
 				);
+				
+				if DragOutline then
+					DragOutline.Position = Instance.Position
+				end
 
 				RenderStepped:Wait();
 			end;
+			
+			-- Remove outline when done dragging
+			if DragOutline then
+				DragOutline:Destroy()
+				DragOutline = nil
+			end
 		end;
 	end)
 end;
