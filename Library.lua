@@ -3317,20 +3317,10 @@ SubTabBar.Visible = true;
 			SubTabBar.Size = UDim2.new(1, 0, 0, 21);
 			UpdateSidesForSubTab();
 
-			local SubTabCount = 0;
-			for _ in next, Tab.SubTabs do SubTabCount += 1 end;
-			SubTabCount += 1;
-
-			for _, Child in next, SubTabBar:GetChildren() do
-				if Child:IsA('Frame') then
-					Child.Size = UDim2.new(1 / SubTabCount, 0, 1, 0);
-				end;
-			end;
-
-			local SubTabButtonOuter = Library:Create('Frame', {
+local SubTabButtonOuter = Library:Create('Frame', {
 				BackgroundColor3 = Library.BackgroundColor;
 				BorderColor3 = Library.OutlineColor;
-				Size = UDim2.new(1 / SubTabCount, 0, 1, 0);
+				Size = UDim2.new(0, Library:GetTextBounds(Name, Library.Font, 16) + 12, 1, 0);
 				ZIndex = 3;
 				Parent = SubTabBar;
 			});
