@@ -30,11 +30,12 @@ local Library = {
 
 	HudRegistry = {};
 
-FontColor = Color3.fromRGB(220, 215, 225);
-	MainColor = Color3.fromRGB(22, 20, 26);
-	BackgroundColor = Color3.fromRGB(13, 12, 17);
-	AccentColor = Color3.fromRGB(220, 80, 115);
-	OutlineColor = Color3.fromRGB(42, 38, 52);
+        FontColor = Color3.fromRGB(220, 215, 225);
+	MainColor = Color3.fromRGB(30, 27, 35);
+	BackgroundColor = Color3.fromRGB(20, 18, 25);
+	AccentColor = Color3.fromRGB(255, 105, 145);
+	OutlineColor = Color3.fromRGB(55, 50, 65);
+	RiskColor = Color3.fromRGB(255, 50, 50),
 
 	Black = Color3.new(0, 0, 0);
 	Font = Enum.Font.Code,
@@ -184,38 +185,17 @@ function Library:MakeDraggable(Instance, Cutoff)
 				return;
 			end;
 
-local DragOutline = Library:Create('Frame', {
-				BackgroundTransparency = 1;
-				BorderSizePixel = 0;
-				Position = UDim2.fromOffset(Instance.AbsolutePosition.X, Instance.AbsolutePosition.Y);
-				Size = UDim2.fromOffset(Instance.AbsoluteSize.X, Instance.AbsoluteSize.Y);
-				ZIndex = 999;
-				Parent = ScreenGui;
-			});
-
-			Library:Create('UIStroke', {
-				Color = Library.AccentColor;
-				Thickness = 1;
-				LineJoinMode = Enum.LineJoinMode.Miter;
-				Parent = DragOutline;
-			});
-local GuiInset = game:GetService('GuiService'):GetGuiInset().Y;
-
 			while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-				local NewPos = UDim2.new(
+				Instance.Position = UDim2.new(
 					0,
 					Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
 					0,
-					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y) + GuiInset;
+					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
 				);
 
-				DragOutline.Position = NewPos;
 				RenderStepped:Wait();
 			end;
-
-			Instance.Position = DragOutline.Position - UDim2.fromOffset(0, GuiInset);
-			DragOutline:Destroy();
-end;
+		end;
 	end)
 end;
 
