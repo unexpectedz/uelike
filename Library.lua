@@ -199,21 +199,23 @@ local DragOutline = Library:Create('Frame', {
 				LineJoinMode = Enum.LineJoinMode.Miter;
 				Parent = DragOutline;
 			});
+local GuiInset = game:GetService('GuiService'):GetGuiInset().Y;
 
-while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+			while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 				local NewPos = UDim2.new(
 					0,
 					Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
 					0,
-					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
+					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y) + GuiInset;
 				);
 
-				Instance.Position = NewPos;
 				DragOutline.Position = NewPos;
 				RenderStepped:Wait();
 			end;
 
-			DragOutline:Destroy();		end;
+			Instance.Position = DragOutline.Position - UDim2.fromOffset(0, GuiInset);
+			DragOutline:Destroy();
+end;
 	end)
 end;
 
