@@ -186,12 +186,18 @@ function Library:MakeDraggable(Instance, Cutoff)
 
 local DragOutline = Library:Create('Frame', {
 				BackgroundTransparency = 1;
-				BorderColor3 = Library.AccentColor;
-				BorderSizePixel = 2;
+				BorderSizePixel = 0;
 				Position = Instance.Position;
 				Size = Instance.Size;
 				ZIndex = 999;
 				Parent = ScreenGui;
+			});
+
+			Library:Create('UIStroke', {
+				Color = Library.AccentColor;
+				Thickness = 2;
+				LineJoinMode = Enum.LineJoinMode.Miter;
+				Parent = DragOutline;
 			});
 
 			while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
