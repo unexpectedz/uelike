@@ -3343,7 +3343,7 @@ local SubTabIndicator = Library:Create('Frame', {
 				BorderSizePixel = 0;
 				Position = UDim2.new(0, 0, 0, 0);
 				Size = UDim2.new(1, 0, 0, 1);
-				ZIndex = 5;
+				ZIndex = 6;
 				Visible = false;
 				Parent = SubTabButtonOuter;
 			});
@@ -3441,9 +3441,9 @@ local SubLeftSide = Library:Create('ScrollingFrame', {
 					BackgroundColor3 = Library.BackgroundColor;
 					BorderColor3 = Library.OutlineColor;
 					BorderMode = Enum.BorderMode.Inset;
-					Size = UDim2.new(1, 0, 0, 507 + 2);
-					ZIndex = 2;
-					Parent = Info.Side == 1 and SubLeftSide or SubRightSide;
+Size = UDim2.new(1, -8, 0, 507 + 2);
+				ZIndex = 2;
+				Parent = Info.Side == 1 and SubLeftSide or SubRightSide;
 				});
 
 				Library:AddToRegistry(BoxOuter, {
