@@ -187,8 +187,8 @@ function Library:MakeDraggable(Instance, Cutoff)
 local DragOutline = Library:Create('Frame', {
 				BackgroundTransparency = 1;
 				BorderSizePixel = 0;
-				Position = Instance.Position;
-				Size = Instance.Size;
+				Position = UDim2.fromOffset(Instance.AbsolutePosition.X, Instance.AbsolutePosition.Y);
+				Size = UDim2.fromOffset(Instance.AbsoluteSize.X, Instance.AbsoluteSize.Y);
 				ZIndex = 999;
 				Parent = ScreenGui;
 			});
