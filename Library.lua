@@ -3237,8 +3237,8 @@ local TabButtonLabel = Library:CreateLabel({
 
 local SubTabBar = Library:Create('Frame', {
 			BackgroundTransparency = 1;
-			Position = UDim2.new(0, 8, 0, 8);
-			Size = UDim2.new(1, -16, 0, 0);
+			Position = UDim2.new(0, 0, 0, 8);
+			Size = UDim2.new(1, 0, 0, 0);
 			ZIndex = 3;
 			Visible = false;
 			Parent = TabFrame;
@@ -3299,8 +3299,8 @@ for _, Side in next, { LeftSide, RightSide } do
 			end);
 		end;
 
-		local function UpdateSidesForSubTab()
-			local SubBarHeight = SubTabBar.Visible and 28 or 0;
+local function UpdateSidesForSubTab()
+			local SubBarHeight = SubTabBar.Visible and 29 or 0;
 			LeftSide.Position = UDim2.new(0, 8 - 1, 0, 8 - 1 + SubBarHeight);
 			LeftSide.Size = UDim2.new(0.5, -12 + 2, 0, 587 + 2 - SubBarHeight);
 			RightSide.Position = UDim2.new(0.5, 4 + 1, 0, 8 - 1 + SubBarHeight);
@@ -3313,14 +3313,24 @@ for _, Side in next, { LeftSide, RightSide } do
 			local SubTab = {};
 			local IsFirst = next(Tab.SubTabs) == nil;
 
-			SubTabBar.Visible = true;
-			SubTabBar.Size = UDim2.new(1, -16, 0, 21);
+SubTabBar.Visible = true;
+			SubTabBar.Size = UDim2.new(1, 0, 0, 21);
 			UpdateSidesForSubTab();
+
+			local SubTabCount = 0;
+			for _ in next, Tab.SubTabs do SubTabCount += 1 end;
+			SubTabCount += 1;
+
+			for _, Child in next, SubTabBar:GetChildren() do
+				if Child:IsA('Frame') then
+					Child.Size = UDim2.new(1 / SubTabCount, 0, 1, 0);
+				end;
+			end;
 
 			local SubTabButtonOuter = Library:Create('Frame', {
 				BackgroundColor3 = Library.BackgroundColor;
 				BorderColor3 = Library.OutlineColor;
-				Size = UDim2.new(0, Library:GetTextBounds(Name, Library.Font, 14) + 12, 1, 0);
+				Size = UDim2.new(1 / SubTabCount, 0, 1, 0);
 				ZIndex = 3;
 				Parent = SubTabBar;
 			});
@@ -3338,10 +3348,10 @@ for _, Side in next, { LeftSide, RightSide } do
 				Parent = SubTabButtonOuter;
 			});
 
-			local SubTabIndicator = Library:Create('Frame', {
+local SubTabIndicator = Library:Create('Frame', {
 				BackgroundColor3 = Library.AccentColor;
 				BorderSizePixel = 0;
-				Position = UDim2.new(0, 0, 1, -1);
+				Position = UDim2.new(0, 0, 0, 0);
 				Size = UDim2.new(1, 0, 0, 1);
 				ZIndex = 5;
 				Visible = false;
@@ -3352,11 +3362,11 @@ for _, Side in next, { LeftSide, RightSide } do
 				BackgroundColor3 = 'AccentColor';
 			});
 
-			local SubLeftSide = Library:Create('ScrollingFrame', {
+local SubLeftSide = Library:Create('ScrollingFrame', {
 				BackgroundTransparency = 1;
 				BorderSizePixel = 0;
-				Position = UDim2.new(0, 8 - 1, 0, 0);
-				Size = UDim2.new(0.5, -12 + 2, 1, 0);
+				Position = UDim2.new(0, 0, 0, 0);
+				Size = UDim2.new(1, 0, 1, 0);
 				CanvasSize = UDim2.new(0, 0, 0, 0);
 				BottomImage = '';
 				TopImage = '';
