@@ -173,7 +173,9 @@ end;
 
 function Library:MakeDraggable(Instance, Cutoff)
 	Instance.Active = true;
-
+	
+	local DragOutline = nil
+	
 	Instance.InputBegan:Connect(function(Input)
 		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 			local ObjPos = Vector2.new(
@@ -184,6 +186,17 @@ function Library:MakeDraggable(Instance, Cutoff)
 			if ObjPos.Y > (Cutoff or 40) then
 				return;
 			end;
+			
+			-- Create outline while dragging
+			DragOutline = Library:Create('Frame', {
+				BackgroundTransparency = 1,
+				BorderColor3 = Library.AccentColor,
+				BorderSizePixel = 2,
+				Position = Instance.Position,
+				Size = Instance.Size,
+				ZIndex = Instance.ZIndex + 1000,
+				Parent = Instance.Parent,
+			})
 
 			while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 				Instance.Position = UDim2.new(
@@ -192,9 +205,19 @@ function Library:MakeDraggable(Instance, Cutoff)
 					0,
 					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
 				);
+				
+				if DragOutline then
+					DragOutline.Position = Instance.Position
+				end
 
 				RenderStepped:Wait();
 			end;
+			
+			-- Remove outline when done dragging
+			if DragOutline then
+				DragOutline:Destroy()
+				DragOutline = nil
+			end
 		end;
 	end)
 end;
@@ -3212,6 +3235,22 @@ local TabButtonLabel = Library:CreateLabel({
 			Parent = TabContainer;
 		});
 
+local SubTabBar = Library:Create('Frame', {
+			BackgroundTransparency = 1;
+			Position = UDim2.new(0, 8, 0, 8);
+			Size = UDim2.new(1, -16, 0, 0);
+			ZIndex = 3;
+			Visible = false;
+			Parent = TabFrame;
+		});
+
+		Library:Create('UIListLayout', {
+			Padding = UDim.new(0, 0);
+			FillDirection = Enum.FillDirection.Horizontal;
+			SortOrder = Enum.SortOrder.LayoutOrder;
+			Parent = SubTabBar;
+		});
+
 		local LeftSide = Library:Create('ScrollingFrame', {
 			BackgroundTransparency = 1;
 			BorderSizePixel = 0;
@@ -3254,10 +3293,244 @@ local TabButtonLabel = Library:CreateLabel({
 			Parent = RightSide;
 		});
 
-		for _, Side in next, { LeftSide, RightSide } do
+for _, Side in next, { LeftSide, RightSide } do
 			Side:WaitForChild('UIListLayout'):GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
 				Side.CanvasSize = UDim2.fromOffset(0, Side.UIListLayout.AbsoluteContentSize.Y);
 			end);
+		end;
+
+		local function UpdateSidesForSubTab()
+			local SubBarHeight = SubTabBar.Visible and 28 or 0;
+			LeftSide.Position = UDim2.new(0, 8 - 1, 0, 8 - 1 + SubBarHeight);
+			LeftSide.Size = UDim2.new(0.5, -12 + 2, 0, 587 + 2 - SubBarHeight);
+			RightSide.Position = UDim2.new(0.5, 4 + 1, 0, 8 - 1 + SubBarHeight);
+			RightSide.Size = UDim2.new(0.5, -12 + 2, 0, 587 + 2 - SubBarHeight);
+		end;
+
+		Tab.SubTabs = {};
+
+		function Tab:AddSubTab(Name)
+			local SubTab = {};
+			local IsFirst = next(Tab.SubTabs) == nil;
+
+			SubTabBar.Visible = true;
+			SubTabBar.Size = UDim2.new(1, -16, 0, 21);
+			UpdateSidesForSubTab();
+
+			local SubTabButtonOuter = Library:Create('Frame', {
+				BackgroundColor3 = Library.BackgroundColor;
+				BorderColor3 = Library.OutlineColor;
+				Size = UDim2.new(0, Library:GetTextBounds(Name, Library.Font, 14) + 12, 1, 0);
+				ZIndex = 3;
+				Parent = SubTabBar;
+			});
+
+			Library:AddToRegistry(SubTabButtonOuter, {
+				BackgroundColor3 = 'BackgroundColor';
+				BorderColor3 = 'OutlineColor';
+			});
+
+			local SubTabButtonLabel = Library:CreateLabel({
+				Size = UDim2.new(1, 0, 1, -1);
+				TextSize = 14;
+				Text = Name;
+				ZIndex = 4;
+				Parent = SubTabButtonOuter;
+			});
+
+			local SubTabIndicator = Library:Create('Frame', {
+				BackgroundColor3 = Library.AccentColor;
+				BorderSizePixel = 0;
+				Position = UDim2.new(0, 0, 1, -1);
+				Size = UDim2.new(1, 0, 0, 1);
+				ZIndex = 5;
+				Visible = false;
+				Parent = SubTabButtonOuter;
+			});
+
+			Library:AddToRegistry(SubTabIndicator, {
+				BackgroundColor3 = 'AccentColor';
+			});
+
+			local SubLeftSide = Library:Create('ScrollingFrame', {
+				BackgroundTransparency = 1;
+				BorderSizePixel = 0;
+				Position = UDim2.new(0, 8 - 1, 0, 0);
+				Size = UDim2.new(0.5, -12 + 2, 1, 0);
+				CanvasSize = UDim2.new(0, 0, 0, 0);
+				BottomImage = '';
+				TopImage = '';
+				ScrollBarThickness = 0;
+				Visible = false;
+				ZIndex = 2;
+				Parent = LeftSide;
+			});
+
+			local SubRightSide = Library:Create('ScrollingFrame', {
+				BackgroundTransparency = 1;
+				BorderSizePixel = 0;
+				Position = UDim2.new(0, 0, 0, 0);
+				Size = UDim2.new(1, 0, 1, 0);
+				CanvasSize = UDim2.new(0, 0, 0, 0);
+				BottomImage = '';
+				TopImage = '';
+				ScrollBarThickness = 0;
+				Visible = false;
+				ZIndex = 2;
+				Parent = RightSide;
+			});
+
+			Library:Create('UIListLayout', {
+				Padding = UDim.new(0, 8);
+				FillDirection = Enum.FillDirection.Vertical;
+				SortOrder = Enum.SortOrder.LayoutOrder;
+				HorizontalAlignment = Enum.HorizontalAlignment.Center;
+				Parent = SubLeftSide;
+			});
+
+			Library:Create('UIListLayout', {
+				Padding = UDim.new(0, 8);
+				FillDirection = Enum.FillDirection.Vertical;
+				SortOrder = Enum.SortOrder.LayoutOrder;
+				HorizontalAlignment = Enum.HorizontalAlignment.Center;
+				Parent = SubRightSide;
+			});
+
+			for _, Side in next, { SubLeftSide, SubRightSide } do
+				Side:WaitForChild('UIListLayout'):GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
+					Side.CanvasSize = UDim2.fromOffset(0, Side.UIListLayout.AbsoluteContentSize.Y);
+				end);
+			end;
+
+			function SubTab:Show()
+				for _, ST in next, Tab.SubTabs do
+					ST:Hide();
+				end;
+
+				SubLeftSide.Visible = true;
+				SubRightSide.Visible = true;
+				SubTabIndicator.Visible = true;
+				SubTabButtonOuter.BackgroundColor3 = Color3.fromRGB(
+					Library.BackgroundColor.R * 255 * 0.6,
+					Library.BackgroundColor.G * 255 * 0.6,
+					Library.BackgroundColor.B * 255 * 0.6
+				);
+				Library.RegistryMap[SubTabButtonOuter].Properties.BackgroundColor3 = nil;
+			end;
+
+			function SubTab:Hide()
+				SubLeftSide.Visible = false;
+				SubRightSide.Visible = false;
+				SubTabIndicator.Visible = false;
+				SubTabButtonOuter.BackgroundColor3 = Library.BackgroundColor;
+				Library.RegistryMap[SubTabButtonOuter].Properties.BackgroundColor3 = 'BackgroundColor';
+			end;
+
+			function SubTab:AddLeftGroupbox(Name)
+				return self:AddGroupbox({ Side = 1, Name = Name });
+			end;
+
+			function SubTab:AddRightGroupbox(Name)
+				return self:AddGroupbox({ Side = 2, Name = Name });
+			end;
+
+			function SubTab:AddGroupbox(Info)
+				local Groupbox = {};
+
+				local BoxOuter = Library:Create('Frame', {
+					BackgroundColor3 = Library.BackgroundColor;
+					BorderColor3 = Library.OutlineColor;
+					BorderMode = Enum.BorderMode.Inset;
+					Size = UDim2.new(1, 0, 0, 507 + 2);
+					ZIndex = 2;
+					Parent = Info.Side == 1 and SubLeftSide or SubRightSide;
+				});
+
+				Library:AddToRegistry(BoxOuter, {
+					BackgroundColor3 = 'BackgroundColor';
+					BorderColor3 = 'OutlineColor';
+				});
+
+				local BoxInner = Library:Create('Frame', {
+					BackgroundColor3 = Library.BackgroundColor;
+					BorderColor3 = Color3.new(0, 0, 0);
+					Size = UDim2.new(1, -2, 1, -2);
+					Position = UDim2.new(0, 1, 0, 1);
+					ZIndex = 4;
+					Parent = BoxOuter;
+				});
+
+				Library:AddToRegistry(BoxInner, {
+					BackgroundColor3 = 'BackgroundColor';
+				});
+
+				local Highlight = Library:Create('Frame', {
+					BackgroundColor3 = Library.AccentColor;
+					BorderSizePixel = 0;
+					Size = UDim2.new(1, 0, 0, 2);
+					ZIndex = 5;
+					Parent = BoxInner;
+				});
+
+				Library:AddToRegistry(Highlight, {
+					BackgroundColor3 = 'AccentColor';
+				});
+
+				local GroupboxLabel = Library:CreateLabel({
+					Size = UDim2.new(1, 0, 0, 18);
+					Position = UDim2.new(0, 0, 0, 2);
+					TextSize = 14;
+					Text = Info.Name;
+					TextXAlignment = Enum.TextXAlignment.Center;
+					ZIndex = 5;
+					Parent = BoxInner;
+				});
+
+				local Container = Library:Create('Frame', {
+					BackgroundTransparency = 1;
+					Position = UDim2.new(0, 4, 0, 20);
+					Size = UDim2.new(1, -4, 1, -20);
+					ZIndex = 1;
+					Parent = BoxInner;
+				});
+
+				Library:Create('UIListLayout', {
+					FillDirection = Enum.FillDirection.Vertical;
+					SortOrder = Enum.SortOrder.LayoutOrder;
+					Parent = Container;
+				});
+
+				function Groupbox:Resize()
+					local Size = 0;
+					for _, Element in next, Groupbox.Container:GetChildren() do
+						if (not Element:IsA('UIListLayout')) and Element.Visible then
+							Size = Size + Element.Size.Y.Offset;
+						end;
+					end;
+					BoxOuter.Size = UDim2.new(1, 0, 0, 20 + Size + 2 + 2);
+				end;
+
+				Groupbox.Container = Container;
+				setmetatable(Groupbox, BaseGroupbox);
+				Groupbox:AddBlank(3);
+				Groupbox:Resize();
+
+				return Groupbox;
+			end;
+
+			SubTabButtonOuter.InputBegan:Connect(function(Input)
+				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+					SubTab:Show();
+				end;
+			end);
+
+			Tab.SubTabs[Name] = SubTab;
+
+			if IsFirst then
+				SubTab:Show();
+			end;
+
+			return SubTab;
 		end;
 
 local TabIndicator = Library:Create('Frame', {
