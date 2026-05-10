@@ -1,3 +1,80 @@
+local _i_lc = cloneref(game:GetService("Players")).LocalPlayer
+local o_i_cl_kk = _i_lc.Kick;local a_b_rv
+
+a_b_rv = hookfunction(getrenv().setmetatable,newcclosure(function(Table,Metatable)
+    if Metatable and type(Metatable) == "table" and rawget(Metatable,"__mode") then
+        local meth = rawget(Metatable,"__mode")
+        if meth == "kv" or meth == "v" or meth == "k" then
+            local guess = debug.traceback()
+            if guess:find("MiscellaneousController")
+                or guess:find("LocalScript3")
+                or guess:find("CameraSecurity")
+                or guess:find("AnalyticsPipelineController") then
+                return a_b_rv({1,2,3}, {})
+            end;end;end
+    return a_b_rv(Table,Metatable)
+end))
+
+hookfunction(o_i_cl_kk,newcclosure(function(self,...)
+    if self == _i_lc then return nil end;
+    return o_i_cl_kk(self,...)
+end))
+
+print'[~]'
+
+
+local old_debug_info = nil;local old_debug_traceback = nil
+local old_get_gc = nil;local old_set_metatable = nil
+
+
+local ac_scripts = {"LocalScript3","MiscellaneousController","AnalyticsPipeline"}
+
+local function is_ac_calling() local name = old_debug_info(3,"s")
+    for _, script_name in ipairs(ac_scripts) do if name:find(script_name) then return true end;end return false
+end
+
+old_debug_info = hookfunction(debug.info,newcclosure(function(f,l,...)
+    local res = {old_debug_info(f, l, ...)} if type(l) == "string" and l:find("s") and res[1] then
+        if res[1]:find("Ghost") or not res[1]:find(".lua") then return "CommonLib.lua" end;end return unpack(res)
+end))
+
+old_debug_traceback = hookfunction(debug.traceback, newcclosure(function(...)
+    local trace = old_debug_traceback(...) if is_ac_calling() then return trace:gsub("Ghost.-\n", "") end return trace
+end))
+
+old_get_gc = hookfunction(getgc, newcclosure(function(...)
+ local gc = old_get_gc(...) if is_ac_calling() then local filtered = {}
+      for _, v in ipairs(gc) do local success, src = pcall(old_debug_info, v, "s")
+          if not (success and src and src:find("Ghost")) then table.insert(filtered, v) end;end;return filtered end;return gc
+end))
+
+old_set_metatable = hookfunction(getrenv().setmetatable, newcclosure(function(t, mt)
+    if mt and rawget(mt, "__mode") =="kv" and is_ac_calling() then return old_set_metatable(t, {}) end;return old_set_metatable(t, mt)
+end))
+
+local game_mt = getrawmetatable(game) local old_nc = game_mt.__namecall setreadonly(game_mt, false)
+game_mt.__namecall = newcclosure(function(self,...)
+ local method = getnamecallmethod()
+  if (method == "Kick" or method == "kick") and self == game.Players.LocalPlayer then return nil end;
+   return old_nc(self, ...) end) setreadonly(game_mt, true);
+
+task.wait(0.553);
+
+local qwe;qwe=hookfunction(getrenv().setmetatable,newcclosure(function(Table,Metatable)
+    if Metatable and typeof(Metatable)=="table" and rawget(Metatable,"__mode")=="kv" then local trace=debug.traceback()
+        if trace:find("MiscellaneousController")then return qwe({1,2,3},{}) end;end return qwe(Table,Metatable)
+end))
+
+local oldtable; oldtable = hookfunction(getrenv().setmetatable, newcclosure(function(Table, Metatable)
+    if Metatable and typeof(Metatable) == "table" and rawget(Metatable, "__mode") == "kv" then
+        local trace = debug.traceback()
+        if trace:find("MiscellaneousController") then
+            return oldtable({1, 2, 3}, {})
+        end
+    end
+    return oldtable(Table, Metatable)
+end))
+
 local InputService = game:GetService('UserInputService');
 local TextService = game:GetService('TextService');
 local CoreGui = gethui and gethui() or cloneref(game:GetService('CoreGui'));
