@@ -7,7 +7,12 @@ local RunService = game:GetService('RunService')
 local TweenService = game:GetService('TweenService');
 local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = Players.LocalPlayer;
-local Mouse = cloneref(LocalPlayer:GetMouse());
+local Mouse = { X = 0, Y = 0 }
+RunService.RenderStepped:Connect(function()
+    local loc = InputService:GetMouseLocation()
+    Mouse.X = loc.X
+    Mouse.Y = loc.Y
+end)
 
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
 
